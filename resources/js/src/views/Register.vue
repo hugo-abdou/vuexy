@@ -26,9 +26,9 @@
                     <validation-observer ref="registerForm" #default="{ invalid }">
                         <b-form class="auth-register-form mt-2" @submit.prevent="register">
                             <!-- name -->
-                            <b-form-group label="name" label-for="register-name">
-                                <validation-provider #default="{ errors }" name="name" vid="name" rules="required">
-                                    <b-form-input id="register-name" v-model="name" name="register-name" :state="errors.length > 0 ? false : null" placeholder="johndoe" />
+                            <b-form-group label="fullName" label-for="register-fullName">
+                                <validation-provider #default="{ errors }" name="fullName" vid="fullName" rules="required">
+                                    <b-form-input id="register-fullName" v-model="fullName" name="register-fullName" :state="errors.length > 0 ? false : null" placeholder="......" />
                                     <small class="text-danger">{{ errors[0] }}</small>
                                 </validation-provider>
                             </b-form-group>
@@ -175,7 +175,7 @@ export default {
         return {
             sideImg: require('@/assets/images/pages/register-v2.svg'),
             status: false,
-            name: '',
+            fullName: '',
             email: '',
             password: '',
             password_confirmation: '',
@@ -201,18 +201,14 @@ export default {
         register() {
             this.$refs.registerForm.validate().then(success => {
                 if (success) {
-                    useJwt
-                        .register({
-                            name: this.name,
+                    useJwt.register({
+                            fullName: this.fullName,
                             email: this.email,
                             password: this.password,
                             password_confirmation: this.password_confirmation,
                         })
                         .then(response => {
-                            useJwt.setToken(response.data.accessToken)
-                            // useJwt.setRefreshToken(response.data.refreshToken)
-                            localStorage.setItem('userData', JSON.stringify(response.data.userData))
-                            // this.$ability.update(response.data.userData.ability)
+                            this.$store.commit('auth/SET_AUTH',response.data.auth);
                             this.$router.push('/')
                         })
                         .catch(error => {

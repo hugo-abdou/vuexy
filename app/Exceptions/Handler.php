@@ -37,4 +37,15 @@ class Handler extends ExceptionHandler
             //
         });
     }
+
+    public function render($request, Throwable $e)
+    {
+        $response = parent::render($request, $e);
+
+        if (in_array($response->status(), [500])) {
+            return $this->prepareResponse($request, $e);
+        }
+
+        return $response;
+    }
 }

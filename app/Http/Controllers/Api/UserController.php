@@ -2,19 +2,42 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Actions\Fortify\UpdateUserPassword;
+use App\Actions\Fortify\UpdateUserProfileInformation;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\AccountSettingResource;
+use App\Http\Resources\AuthUserResource;
 use Illuminate\Http\Request;
 
-class ProfileController extends Controller
+class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function auth()
     {
-        //
+        return new AuthUserResource(auth()->user());
+    }
+
+    public function auth_details(Request $request)
+    {
+        return new AccountSettingResource(auth()->user());
+    }
+
+    public function update_auth_general_details(Request $request, UpdateUserProfileInformation $profile, UpdateUserPassword $password)
+    {
+        if (!$request->has("action")) return response("error", 400);
+
+        switch ($request->get("action")) {
+            case 'general':
+                $profile->update(auth()->user(), $request->all());
+                break;
+            case 'password':
+                $password->update(auth()->user(), $request->all());
+                break;
+
+            default:
+                break;
+        }
+
+        return response("success", 200);
     }
 
     /**

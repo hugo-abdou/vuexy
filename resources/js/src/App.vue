@@ -1,14 +1,9 @@
 <template>
-  <div
-    id="app"
-    class="h-100"
-    :class="[skinClasses]"
-  >
-    <component :is="layout">
-      <router-view />
-    </component>
-
-  </div>
+    <div id="app" class="h-100" :class="[skinClasses]">
+        <component :is="layout">
+            <router-view />
+        </component>
+    </div>
 </template>
 
 <script>
@@ -22,80 +17,99 @@ import useAppConfig from '@core/app-config/useAppConfig'
 import { useWindowSize, useCssVar } from '@vueuse/core'
 
 import store from '@/store'
+import useJwt from 'src/auth/jwt/useJwt'
+import model from './libs/model'
+import axiosIns from './libs/axios'
 
 const LayoutVertical = () => import('@/layouts/vertical/LayoutVertical.vue')
 const LayoutHorizontal = () => import('@/layouts/horizontal/LayoutHorizontal.vue')
 const LayoutFull = () => import('@/layouts/full/LayoutFull.vue')
 
 export default {
-  components: {
+    components: {
 
-    // Layouts
-    LayoutHorizontal,
-    LayoutVertical,
-    LayoutFull,
+        // Layouts
+        LayoutHorizontal,
+        LayoutVertical,
+        LayoutFull,
 
-  },
-  // ! We can move this computed: layout & contentLayoutType once we get to use Vue 3
-  // Currently, router.currentRoute is not reactive and doesn't trigger any change
-  computed: {
-    layout() {
-      if (this.$route.meta.layout === 'full') return 'layout-full'
-      return `layout-${this.contentLayoutType}`
     },
-    contentLayoutType() {
-      return this.$store.state.appConfig.layout.type
+    // ! We can move this computed: layout & contentLayoutType once we get to use Vue 3
+    // Currently, router.currentRoute is not reactive and doesn't trigger any change
+    computed: {
+        layout() {
+            if (this.$route.meta.layout === 'full') return 'layout-full'
+            return `layout-${this.contentLayoutType}`
+        },
+        contentLayoutType() {
+            return this.$store.state.appConfig.layout.type
+        },
     },
-  },
-  beforeCreate() {
-    // Set colors in theme
-    const colors = ['primary', 'secondary', 'success', 'info', 'warning', 'danger', 'light', 'dark']
+    beforeCreate() {
+         useJwt.onResponseError(({ response }) => {
+            if (response && response.status === 401) {
+                // clear the storage to get the new sesstion
+                localStorage.removeItem('auth')
+                // redirect to login page
+                this.$router.push({ name: "auth-login" })
+            }
 
-    // eslint-disable-next-line no-plusplus
-    for (let i = 0, len = colors.length; i < len; i++) {
-      $themeColors[colors[i]] = useCssVar(`--${colors[i]}`, document.documentElement).value.trim()
-    }
+            // just for debuging
+            if (response && response.status === 500 && typeof response.data === 'string' ) {
+                model.show(response.data)
+            }
+        })
+        // Set colors in theme
+        const colors = ['primary', 'secondary', 'success', 'info', 'warning', 'danger', 'light', 'dark']
 
-    // Set Theme Breakpoints
-    const breakpoints = ['xs', 'sm', 'md', 'lg', 'xl']
+        // eslint-disable-next-line no-plusplus
+        for (let i = 0, len = colors.length; i < len; i++) {
+            $themeColors[colors[i]] = useCssVar(`--${colors[i]}`, document.documentElement).value.trim()
+        }
 
-    // eslint-disable-next-line no-plusplus
-    for (let i = 0, len = breakpoints.length; i < len; i++) {
-      $themeBreakpoints[breakpoints[i]] = Number(useCssVar(`--breakpoint-${breakpoints[i]}`, document.documentElement).value.slice(0, -2))
-    }
+        // Set Theme Breakpoints
+        const breakpoints = ['xs', 'sm', 'md', 'lg', 'xl']
 
-    // Set RTL
-    const { isRTL } = $themeConfig.layout
-    document.documentElement.setAttribute('dir', isRTL ? 'rtl' : 'ltr')
-  },
-  setup() {
-    const { skin, skinClasses } = useAppConfig()
+        // eslint-disable-next-line no-plusplus
+        for (let i = 0, len = breakpoints.length; i < len; i++) {
+            $themeBreakpoints[breakpoints[i]] = Number(useCssVar(`--breakpoint-${breakpoints[i]}`, document.documentElement).value.slice(0, -2))
+        }
 
-    // If skin is dark when initialized => Add class to body
-    if (skin.value === 'dark') document.body.classList.add('dark-layout')
+        // Set RTL
+        const { isRTL } = $themeConfig.layout
+        document.documentElement.setAttribute('dir', isRTL ? 'rtl' : 'ltr')
+    },
+    setup() {
+        // Set Auth if exist
+        store.dispatch('auth/fetchAuth');
 
-    // Provide toast for Composition API usage
-    // This for those apps/components which uses composition API
-    // Demos will still use Options API for ease
-    provideToast({
-      hideProgressBar: true,
-      closeOnClick: false,
-      closeButton: false,
-      icon: false,
-      timeout: 3000,
-      transition: 'Vue-Toastification__fade',
-    })
+        const { skin, skinClasses } = useAppConfig()
 
-    // Set Window Width in store
-    store.commit('app/UPDATE_WINDOW_WIDTH', window.innerWidth)
-    const { width: windowWidth } = useWindowSize()
-    watch(windowWidth, val => {
-      store.commit('app/UPDATE_WINDOW_WIDTH', val)
-    })
+        // If skin is dark when initialized => Add class to body
+        if (skin.value === 'dark') document.body.classList.add('dark-layout')
 
-    return {
-      skinClasses,
-    }
-  },
+        // Provide toast for Composition API usage
+        // This for those apps/components which uses composition API
+        // Demos will still use Options API for ease
+        provideToast({
+            hideProgressBar: true,
+            closeOnClick: false,
+            closeButton: false,
+            icon: false,
+            timeout: 3000,
+            transition: 'Vue-Toastification__fade',
+        })
+
+        // Set Window Width in store
+        store.commit('app/UPDATE_WINDOW_WIDTH', window.innerWidth)
+        const { width: windowWidth } = useWindowSize()
+        watch(windowWidth, val => {
+            store.commit('app/UPDATE_WINDOW_WIDTH', val)
+        })
+
+        return {
+            skinClasses,
+        }
+    },
 }
 </script>

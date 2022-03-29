@@ -18,15 +18,14 @@ class CreateNewUser
      */
     public function create(array $input)
     {
-        Validator::make($input, [
-            'name' => ['required', 'string'],
+        request()->validate([
+            'fullName' => ['required', 'string'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => array_merge($this->passwordRules(), ['confirmed']),
-            'photo' => ['nullable', 'mimes:jpg,jpeg,png', 'max:1024'],
-        ])->validate();
-
+            'avatar' => ['nullable', 'mimes:jpg,jpeg,png', 'max:1024'],
+        ]);
         $user = User::create([
-            'name' => $input['name'],
+            'fullName' => $input['fullName'],
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
         ]);

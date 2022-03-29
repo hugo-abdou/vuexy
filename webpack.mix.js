@@ -16,6 +16,7 @@ mix.js("resources/js/app.js", "public/js")
         resolve: {
             alias: {
                 "@": path.resolve(__dirname, "resources/js/src/"),
+                src: path.resolve(__dirname, "resources/js/src/"),
                 "@Pages": path.resolve(__dirname, "resources/js/src/views"),
                 "@themeConfig": path.resolve(
                     __dirname,

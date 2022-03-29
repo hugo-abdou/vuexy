@@ -1,10 +1,9 @@
-import useJwt from "@core/auth/jwt/useJwt";
 import axios from "@axios";
+import JwtService from "./jwtService";
 
-const { jwt } = useJwt(axios, {
+export default new JwtService(axios, {
     loginEndpoint: "/login",
     registerEndpoint: "/register",
-    refreshEndpoint: "/refresh-token",
     logoutEndpoint: "/logout",
+    authEndpoint: "/auth",
 });
-export default jwt;

@@ -13,6 +13,7 @@
 <script>
 import { BCard, BCardText, BLink } from 'bootstrap-vue'
 import { BButton } from 'bootstrap-vue'
+import useJwt from 'src/auth/jwt/useJwt'
 import Ripple from 'vue-ripple-directive'
 
 export default {
@@ -24,13 +25,6 @@ export default {
     },
     directives: {
         Ripple,
-    },
-    methods: {
-        getData() {
-            this.$http('/user').then((res) => {
-                console.log(res)
-            })
-        }
     },
 }
 </script>

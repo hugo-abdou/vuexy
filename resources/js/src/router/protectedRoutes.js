@@ -1,4 +1,4 @@
-let protectedRoutes = [
+let routes = [
     {
         path: "/",
         name: "home",
@@ -31,7 +31,7 @@ let protectedRoutes = [
     },
 ];
 
-protectedRoutes = protectedRoutes.map((route) => {
+const protectedRoutes = routes.map((route) => {
     route.meta.redirectIfNotLoggedIn = true;
     return route;
 });

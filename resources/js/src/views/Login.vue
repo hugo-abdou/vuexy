@@ -22,22 +22,6 @@
                     <b-card-title class="mb-1 font-weight-bold" title-tag="h2">Welcome to Vuexy! 👋</b-card-title>
                     <b-card-text class="mb-2">Please sign-in to your account and start the adventure</b-card-text>
 
-                    <b-alert variant="primary" show>
-                        <div class="alert-body font-small-2">
-                            <p>
-                                <small class="mr-50">
-                                    <span class="font-weight-bold">Admin:</span> admin@demo.com | admin
-                                </small>
-                            </p>
-                            <p>
-                                <small class="mr-50">
-                                    <span class="font-weight-bold">Client:</span> client@demo.com | client
-                                </small>
-                            </p>
-                        </div>
-                        <feather-icon v-b-tooltip.hover.left="'This is just for ACL demo purpose'" icon="HelpCircleIcon" size="18" class="position-absolute" style="top: 10; right: 10;" />
-                    </b-alert>
-
                     <!-- form -->
                     <validation-observer ref="loginForm" #default="{ invalid }">
                         <b-form class="auth-login-form mt-2" @submit.prevent="login">
@@ -145,10 +129,6 @@ import useJwt from '@/auth/jwt/useJwt'
 import { required, email } from '@validations'
 import { togglePasswordVisibility } from '@core/mixins/ui/forms'
 import store from '@/store/index'
-import { getHomeRouteForLoggedInUser } from '@/auth/utils'
-
-import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
-
 export default {
     directives: {
         'b-tooltip': VBTooltip,
@@ -177,7 +157,7 @@ export default {
         return {
             status: '',
             password: 'password',
-            userEmail: 'moikinge3@gmail.com',
+            userEmail: 'moikinge@gmail.com',
             sideImg: require('@/assets/images/pages/login-v2.svg'),
             // validation rules
             required,
@@ -201,33 +181,17 @@ export default {
         login() {
             this.$refs.loginForm.validate().then(success => {
                 if (success) {
-                    useJwt
-                        .login({
+                    useJwt.login({
                             email: this.userEmail,
                             password: this.password,
                         })
-                        .then(response => {
-                            const { userData } = response.data
-                            useJwt.setToken(response.data.accessToken)
-                            useJwt.setRefreshToken(response.data.refreshToken)
-                            localStorage.setItem('userData', JSON.stringify(userData))
-                            // this.$ability.update(userData.ability)
-                            this.$router.replace(getHomeRouteForLoggedInUser('admin')).then(() => {
-                                this.$toast({
-                                    component: ToastificationContent,
-                                    position: 'top-right',
-                                    props: {
-                                        title: `Welcome ${userData.name}`,
-                                        icon: 'CoffeeIcon',
-                                        variant: 'success',
-                                        text: `You have successfully logged in as admin. Now you can start to explore!`,
-                                    },
-                                })
+                            .then(response => {
+                                this.$store.commit('auth/SET_AUTH',response.data.auth);
+                                this.$router.push({name:'home'})
                             })
-                        })
-                        .catch(error => {
-                            this.$refs.loginForm.setErrors(error.response.data.errors)
-                        })
+                            .catch(error => {
+                                this.$refs.loginForm.setErrors(error.response.data.errors)
+                            })
                 }
             })
         },

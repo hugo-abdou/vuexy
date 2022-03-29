@@ -1,5 +1,11 @@
 <template>
-    <b-tabs vertical content-class="col-12 col-md-9 mt-1 mt-md-0" pills nav-wrapper-class="col-md-3 col-12" nav-class="nav-left">
+    <b-tabs
+        vertical
+        content-class="col-12 col-md-9 mt-1 mt-md-0"
+        pills
+        nav-wrapper-class="col-md-3 col-12"
+        nav-class="nav-left"
+    >
         <!-- general tab -->
         <b-tab active>
             <!-- title -->
@@ -8,7 +14,10 @@
                 <span class="font-weight-bold">General</span>
             </template>
 
-            <account-setting-general v-if="options.general" :general-data="options.general" />
+            <account-setting-general
+                v-if="options.general"
+                :general-data="options.general"
+            />
         </b-tab>
         <!--/ general tab -->
 
@@ -32,7 +41,10 @@
                 <span class="font-weight-bold">Information</span>
             </template>
 
-            <account-setting-information v-if="options.info" :information-data="options.info" />
+            <!-- <account-setting-information
+                v-if="options.info"
+                :information-data="options.info"
+            /> -->
         </b-tab>
 
         <!-- social links -->
@@ -43,7 +55,7 @@
                 <span class="font-weight-bold">Social</span>
             </template>
 
-            <account-setting-social v-if="options.social" :social-data="options.social" />
+            <!-- <account-setting-social v-if="options.social" :social-data="options.social" /> -->
         </b-tab>
 
         <!-- notification -->
@@ -54,19 +66,23 @@
                 <span class="font-weight-bold">Notifications</span>
             </template>
 
-            <account-setting-notification v-if="options.notification" :notification-data="options.notification" />
+            <!-- <account-setting-notification
+                v-if="options.notification"
+                :notification-data="options.notification"
+            /> -->
         </b-tab>
     </b-tabs>
 </template>
 
 <script>
-import { BTabs, BTab } from 'bootstrap-vue'
-import AccountSettingGeneral from './AccountSettingGeneral.vue'
-import AccountSettingPassword from './AccountSettingPassword.vue'
-import AccountSettingInformation from './AccountSettingInformation.vue'
-import AccountSettingSocial from './AccountSettingSocial.vue'
-import AccountSettingNotification from './AccountSettingNotification.vue'
-import accountSetting from './data'
+import { BTabs, BTab } from "bootstrap-vue";
+import AccountSettingGeneral from "./AccountSettingGeneral.vue";
+import AccountSettingPassword from "./AccountSettingPassword.vue";
+import AccountSettingInformation from "./AccountSettingInformation.vue";
+import AccountSettingSocial from "./AccountSettingSocial.vue";
+import AccountSettingNotification from "./AccountSettingNotification.vue";
+import accountSetting from "./data";
+import axiosIns from "src/libs/axios";
 
 export default {
     components: {
@@ -80,11 +96,13 @@ export default {
     },
     data() {
         return {
-            options: accountSetting,
-        }
+            options: {},
+        };
     },
     beforeCreate() {
-        // this.$http.get('/account-setting/data').then(res => { this.options = res.data })
+        axiosIns.get("auth/details").then((res) => {
+            this.options = res.data;
+        });
     },
-}
+};
 </script>

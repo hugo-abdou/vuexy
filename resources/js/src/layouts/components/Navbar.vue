@@ -15,21 +15,40 @@
         </div>
 
         <b-navbar-nav class="nav align-items-center ml-auto">
-            <b-nav-item-dropdown right toggle-class="d-flex align-items-center dropdown-user-link" class="dropdown-user">
+            <b-nav-item-dropdown
+                right
+                toggle-class="d-flex align-items-center dropdown-user-link"
+                class="dropdown-user"
+            >
                 <template #button-content>
                     <div class="d-sm-flex d-none user-nav">
-                        <p class="user-name font-weight-bolder mb-0">John Doe</p>
+                        <p class="user-name font-weight-bolder mb-0">
+                            {{ $store.state.auth.auth.fullName || "null" }}
+                        </p>
                         <span class="user-status">Admin</span>
                     </div>
-                    <b-avatar size="40" variant="light-primary" badge :src="require('@/assets/images/avatars/13-small.png')" class="badge-minimal" badge-variant="success" />
+                    <b-avatar
+                        size="40"
+                        variant="light-primary"
+                        badge
+                        :src="require('@/assets/images/avatars/13-small.png')"
+                        class="badge-minimal"
+                        badge-variant="success"
+                    />
                 </template>
 
-                <b-dropdown-item :to="{ name: 'profile' }" link-class="d-flex align-items-center">
+                <b-dropdown-item
+                    :to="{ name: 'profile' }"
+                    link-class="d-flex align-items-center"
+                >
                     <feather-icon size="16" icon="UserIcon" class="mr-50" />
                     <span>Profile</span>
                 </b-dropdown-item>
-                <b-dropdown-item :to="{ name: 'account-setting' }" link-class="d-flex align-items-center">
-                    <feather-icon size="16" icon="BellIcon" class="mr-50" />
+                <b-dropdown-item
+                    :to="{ name: 'account-setting' }"
+                    link-class="d-flex align-items-center"
+                >
+                    <feather-icon size="16" icon="SettingsIcon" class="mr-50" />
                     <span>Settings</span>
                 </b-dropdown-item>
 
@@ -46,11 +65,16 @@
 
 <script>
 import {
-    BLink, BNavbarNav, BNavItemDropdown, BDropdownItem, BDropdownDivider, BAvatar,
-} from 'bootstrap-vue'
-import DarkToggler from '@core/layouts/components/app-navbar/components/DarkToggler.vue'
-import useJwt from '@/auth/jwt/useJwt'
-import { initialAbility } from '@/libs/acl/config'
+    BLink,
+    BNavbarNav,
+    BNavItemDropdown,
+    BDropdownItem,
+    BDropdownDivider,
+    BAvatar,
+} from "bootstrap-vue";
+import DarkToggler from "@core/layouts/components/app-navbar/components/DarkToggler.vue";
+import useJwt from "@/auth/jwt/useJwt";
+import { mapGetters } from "vuex";
 
 export default {
     components: {
@@ -67,25 +91,23 @@ export default {
     props: {
         toggleVerticalMenuActive: {
             type: Function,
-            default: () => { },
+            default: () => {},
+        },
+    },
+    computed: {
+        ...mapGetters({ auth: "auth/auth" }),
+        avatar() {
+            return this.auth && this.auth.profile_photo_path;
         },
     },
     methods: {
         logout() {
-            // Remove userData from localStorage
-            // ? You just removed token from localStorage. If you like, you can also make API call to backend to blacklist used token
-            localStorage.removeItem(useJwt.jwtConfig.storageTokenKeyName)
-            localStorage.removeItem(useJwt.jwtConfig.storageRefreshTokenKeyName)
-
-            // Remove userData from localStorage
-            localStorage.removeItem('userData')
-
-            // Reset ability
-            // this.$ability.update(initialAbility)
-
-            // Redirect to login page
-            this.$router.push({ name: 'auth-login' })
+            useJwt.logout().then((response) => {
+                // Redirect to login page
+                this.$store.commit("auth/SET_AUTH", null);
+                this.$router.push({ name: "auth-login" });
+            });
         },
     },
-}
+};
 </script>
