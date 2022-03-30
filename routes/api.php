@@ -22,4 +22,7 @@ Route::middleware(['auth:sanctum'])->prefix('auth')->controller(UserController::
     Route::get('/', 'auth');
     Route::get('/details', 'auth_details');
     Route::post('/update', 'update_auth_general_details');
+    Route::post('/confirm-email', function () {
+        dd('not implimented yet');
+    });
 });

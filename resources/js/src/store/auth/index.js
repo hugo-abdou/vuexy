@@ -26,10 +26,8 @@ export default {
             }
         },
         async updateAuth(store) {
-            const {
-                data: { auth },
-            } = await useJwt.fetchAuth();
-            store.commit("SET_AUTH", auth);
+            const { data } = await useJwt.fetchAuth();
+            store.commit("SET_AUTH", data);
         },
     },
 };

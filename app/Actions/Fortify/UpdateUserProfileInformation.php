@@ -3,6 +3,7 @@
 namespace App\Actions\Fortify;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -17,11 +18,9 @@ class UpdateUserProfileInformation
      */
     public function update($user, array $input)
     {
-        Validator::make($input, [
-            'fullName' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
-            'avatar' => Rule::when(is_file($input['avatar']), ['nullable', 'mimes:jpg,jpeg,png', 'max:1024']),
-        ])->validate();
+        $data = Validator::make($input, $this->validation_rules($user, $input))->validate();
+
+        $filtered = Arr::except($data, ['avatar']);
 
         if (isset($input['avatar']) && is_file($input['avatar'])) {
             $user->updateProfilePhoto($input['avatar']);
@@ -33,9 +32,7 @@ class UpdateUserProfileInformation
         ) {
             $this->updateVerifiedUser($user, $input);
         } else {
-            $user->forceFill(['fullName' => $input['fullName'],
-                'email' => $input['email'],
-            ])->save();
+            $user->forceFill($filtered)->save();
         }
     }
 
@@ -48,11 +45,22 @@ class UpdateUserProfileInformation
      */
     protected function updateVerifiedUser($user, array $input)
     {
-        $user->forceFill([
-            'fullName' => $input['fullName'],
-            'email' => $input['email'],
+        $user->forceFill(array_merge($this->validation_rules($user, $input), [
             'email_verified_at' => null,
-        ])->save();
+        ]))->save();
         // $user->sendEmailVerificationNotification();
+    }
+
+    protected function validation_rules($user, array $input)
+    {
+        return [
+            'fullName' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
+            'avatar' => Rule::when(is_file($input['avatar']), ['required', 'mimes:jpg,jpeg,png', 'max:1024']),
+            'bio' => Rule::when(isset($input['bio']), ['required', 'string', 'max:255']),
+            'phone' => Rule::when(isset($input['phone']), ['required', 'string', 'max:255']),
+            'birth_date' => Rule::when(isset($input['birth_date']), ['required', 'string', 'max:255']),
+            'country' => Rule::when(isset($input['country']), ['required', 'string', 'max:255']),
+        ];
     }
 }

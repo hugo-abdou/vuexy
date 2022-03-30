@@ -32,6 +32,9 @@ class UserController extends Controller
             case 'password':
                 $password->update(auth()->user(), $request->all());
                 break;
+            case 'reset_avatar':
+                auth()->user()->deleteProfilePhoto();
+                break;
 
             default:
                 break;

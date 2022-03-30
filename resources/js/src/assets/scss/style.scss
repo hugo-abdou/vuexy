@@ -8,3 +8,12 @@ WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BET
     object-fit: cover;
     object-position: center;
 }
+.profile-img img{
+    width: 100%;
+    height: 100%;
+    object-position: center;
+    object-fit: cover;
+}
+.Vue-Toastification__toast{
+    border: solid 1px rgb(67, 67, 97);
+}

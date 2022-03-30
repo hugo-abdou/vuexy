@@ -23,17 +23,15 @@
                 <template #button-content>
                     <div class="d-sm-flex d-none user-nav">
                         <p class="user-name font-weight-bolder mb-0">
-                            {{ $store.state.auth.auth.fullName || "null" }}
+                            {{ auth.fullName || "" }}
                         </p>
-                        <span class="user-status">Admin</span>
+                        <span class="user-status">{{ auth.role || "" }}</span>
                     </div>
                     <b-avatar
                         size="40"
                         variant="light-primary"
-                        badge
-                        :src="require('@/assets/images/avatars/13-small.png')"
+                        :src="auth.avatar || ''"
                         class="badge-minimal"
-                        badge-variant="success"
                     />
                 </template>
 
@@ -96,9 +94,6 @@ export default {
     },
     computed: {
         ...mapGetters({ auth: "auth/auth" }),
-        avatar() {
-            return this.auth && this.auth.profile_photo_path;
-        },
     },
     methods: {
         logout() {

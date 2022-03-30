@@ -13,8 +13,8 @@
                 <feather-icon icon="UserIcon" size="18" class="mr-50" />
                 <span class="font-weight-bold">General</span>
             </template>
-
             <account-setting-general
+                @updated="updated"
                 v-if="options.general"
                 :general-data="options.general"
             />
@@ -32,20 +32,6 @@
             <account-setting-password />
         </b-tab>
         <!--/ change password tab -->
-
-        <!-- info -->
-        <b-tab>
-            <!-- title -->
-            <template #title>
-                <feather-icon icon="InfoIcon" size="18" class="mr-50" />
-                <span class="font-weight-bold">Information</span>
-            </template>
-
-            <!-- <account-setting-information
-                v-if="options.info"
-                :information-data="options.info"
-            /> -->
-        </b-tab>
 
         <!-- social links -->
         <b-tab>
@@ -78,11 +64,10 @@
 import { BTabs, BTab } from "bootstrap-vue";
 import AccountSettingGeneral from "./AccountSettingGeneral.vue";
 import AccountSettingPassword from "./AccountSettingPassword.vue";
-import AccountSettingInformation from "./AccountSettingInformation.vue";
 import AccountSettingSocial from "./AccountSettingSocial.vue";
 import AccountSettingNotification from "./AccountSettingNotification.vue";
-import accountSetting from "./data";
 import axiosIns from "src/libs/axios";
+import ToastificationContent from "src/@core/components/toastification/ToastificationContent.vue";
 
 export default {
     components: {
@@ -90,7 +75,6 @@ export default {
         BTab,
         AccountSettingGeneral,
         AccountSettingPassword,
-        AccountSettingInformation,
         AccountSettingSocial,
         AccountSettingNotification,
     },
@@ -99,10 +83,29 @@ export default {
             options: {},
         };
     },
-    beforeCreate() {
-        axiosIns.get("auth/details").then((res) => {
-            this.options = res.data;
-        });
+    created() {
+        this.getDetails();
+    },
+    methods: {
+        updated() {
+            this.$toast({
+                component: ToastificationContent,
+                position: "top-right",
+                props: {
+                    title: `Congratulations`,
+                    icon: "CoffeeIcon",
+                    variant: "success",
+                    text: `You are successfully changed your informations`,
+                },
+            });
+            this.getDetails();
+            this.$store.dispatch("auth/updateAuth");
+        },
+        getDetails() {
+            axiosIns.get("auth/details").then((res) => {
+                this.options = res.data;
+            });
+        },
     },
 };
 </script>

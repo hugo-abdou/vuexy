@@ -17,7 +17,8 @@ class AuthUserResource extends JsonResource
         return [
             "id" =>  $this->id,
             "fullName" => $this->fullName,
-            "avatar" => $this->ProfilePhotoUrl
+            "avatar" => $this->ProfilePhotoUrl,
+            "role" => "admin"
         ];
     }
 }

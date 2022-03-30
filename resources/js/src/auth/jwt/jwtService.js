@@ -42,12 +42,13 @@ export default class JwtService {
     logout(...args) {
         return this.axiosIns.post(this.jwtConfig.logoutEndpoint, ...args);
     }
-
     fetchAuth() {
         return this.axiosIns.get(this.jwtConfig.authEndpoint);
     }
-
     onResponseError(cb) {
         this.responseErrorCallbacks.push(cb);
+    }
+    confirmEmail() {
+        this.axiosIns.post(this.jwtConfig.confirmEmailEndpoint);
     }
 }

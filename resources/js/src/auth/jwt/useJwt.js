@@ -6,4 +6,5 @@ export default new JwtService(axios, {
     registerEndpoint: "/register",
     logoutEndpoint: "/logout",
     authEndpoint: "/auth",
+    confirmEmailEndpoint: "/auth/confirm-email",
 });
