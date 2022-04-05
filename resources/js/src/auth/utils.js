@@ -1,12 +1,10 @@
-import useJwt from "./jwt/useJwt";
-
-export const GetCookie = (name) => {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) {
-        return parts.pop().split(";").shift();
-    }
-};
+// export const GetCookie = (name) => {
+//     const value = `; ${document.cookie}`;
+//     const parts = value.split(`; ${name}=`);
+//     if (parts.length === 2) {
+//         return parts.pop().split(";").shift();
+//     }
+// };
 
 export const getAuthData = () => JSON.parse(localStorage.getItem("auth"));
 

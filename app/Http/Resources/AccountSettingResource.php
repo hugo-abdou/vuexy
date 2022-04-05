@@ -4,8 +4,6 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-use function PHPUnit\Framework\isNull;
-
 class AccountSettingResource extends JsonResource
 {
     /**
@@ -21,7 +19,11 @@ class AccountSettingResource extends JsonResource
                 'fullName' => $this->fullName,
                 'email' => $this->email,
                 'avatar' => $this->profilePhotoUrl,
-                'emailConfirmed' => !is_null($this->email_verified_at)
+                'emailConfirmed' => is_null($this->email_verified_at),
+                'birth_date' => $this->birth_date,
+                'phone' => $this->phone,
+                'country' => $this->country,
+                'bio' => $this->bio
             ]
         ];
     }

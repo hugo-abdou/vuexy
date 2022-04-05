@@ -125,7 +125,12 @@
                     <!--/ bio -->
                     <!-- birth date -->
                     <b-col md="6">
-                        <validation-provider #default="{ errors }" name="date" vid="date">
+                        <validation-provider
+                            #default="{ errors }"
+                            name="date"
+                            vid="date"
+                            rules="required"
+                        >
                             <b-form-group
                                 label-for="example-datepicker"
                                 label="Birth date"
@@ -149,6 +154,7 @@
                             #default="{ errors }"
                             name="Mobile"
                             vid="phone"
+                            rules="required"
                         >
                             <b-form-group label="Mobile" label-for="phone">
                                 <b-form-input
@@ -171,6 +177,7 @@
                             #default="{ errors }"
                             name="country"
                             vid="country"
+                            rules="required"
                         >
                             <b-form-group
                                 label-for="country"
@@ -293,7 +300,16 @@ export default {
         const refInputEl = ref(null);
         const previewEl = ref(null);
         const formValidator = ref(null);
-        const formData = ref({ ...props.generalData });
+        const formData = ref({
+            avatar: "",
+            fullName: "",
+            email: "",
+            bio: "",
+            phone: "",
+            birth_date: "",
+            country: "",
+            ...props.generalData,
+        });
         const profileFile = null;
 
         function renderImg(result) {
@@ -310,16 +326,17 @@ export default {
         function handelSubmit() {
             const { post } = useForm(formData.value);
             formValidator.value.validate().then((success) => {
-                post("auth/update?action=general")
-                    .then((res) => {
-                        emit("updated");
-                    })
-                    .catch((error) => {
-                        error.response.status === 401 &&
-                            this.$refs.formValidator.setErrors(
-                                error.response.data.errors
-                            );
-                    });
+                success &&
+                    post("auth/update?action=general")
+                        .then((res) => {
+                            emit("updated");
+                        })
+                        .catch((error) => {
+                            error.response.status === 401 &&
+                                this.$refs.formValidator.setErrors(
+                                    error.response.data.errors
+                                );
+                        });
             });
         }
 
@@ -343,3 +360,8 @@ export default {
     },
 };
 </script>
+
+<style lang="scss">
+@import "~@core/scss/vue/libs/vue-select.scss";
+@import "~@core/scss/vue/libs/vue-flatpicker.scss";
+</style>

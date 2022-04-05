@@ -1,28 +1,28 @@
 <template>
-    <div v-if="Object.keys(profileData).length" id="user-profile">
-        <profile-header :header-data="profileData.header" />
+    <div id="user-profile">
+        <profile-header />
         <!-- profile info  -->
         <section id="profile-info">
             <b-row>
                 <!-- about suggested page and twitter feed -->
                 <b-col lg="3" cols="12" order="2" order-lg="1">
-                    <profile-about :about-data="profileData.userAbout" />
-                    <profile-suggested-pages :pages-data="profileData.suggestedPages" />
-                    <profile-twitter-feed :twitter-feed="profileData.twitterFeeds" />
+                    <profile-about />
+                    <profile-suggested-pages />
+                    <profile-twitter-feed />
                 </b-col>
                 <!--/ about suggested page and twitter feed -->
 
                 <!-- post -->
                 <b-col lg="6" cols="12" order="1" order-lg="2">
-                    <profile-post :posts="profileData.post" />
+                    <profile-post />
                 </b-col>
                 <!-- post -->
 
                 <!-- latest photos suggestion and polls -->
                 <b-col lg="3" cols="12" order="3">
-                    <profile-latest-photos :latest-images="profileData.latestPhotos" />
-                    <profile-suggestion :suggestions="profileData.suggestions" />
-                    <profile-polls :polls-data="profileData.polls" />
+                    <profile-latest-photos />
+                    <profile-suggestion />
+                    <profile-polls />
                 </b-col>
                 <!--/ latest photos suggestion and polls -->
 
@@ -38,19 +38,19 @@
 </template>
 
 <script>
-import { BRow, BCol } from 'bootstrap-vue'
+import { BRow, BCol } from "bootstrap-vue";
 
-import ProfileHeader from './ProfileHeader.vue'
-import ProfileAbout from './ProfileAbout.vue'
-import ProfileSuggestedPages from './ProfileSuggestedPages.vue'
-import ProfileTwitterFeed from './ProfileTwitterFeed.vue'
-import ProfilePost from './ProfilePost.vue'
-import ProfileLatestPhotos from './ProfileLatestPhotos.vue'
-import ProfileSuggestion from './ProfileSuggestion.vue'
-import ProfilePolls from './ProfilePolls.vue'
-import profileBottom from './profileBottom.vue'
+import ProfileHeader from "./ProfileHeader.vue";
+import ProfileAbout from "./ProfileAbout.vue";
+import ProfileSuggestedPages from "./ProfileSuggestedPages.vue";
+import ProfileTwitterFeed from "./ProfileTwitterFeed.vue";
+import ProfilePost from "./ProfilePost.vue";
+import ProfileLatestPhotos from "./ProfileLatestPhotos.vue";
+import ProfileSuggestion from "./ProfileSuggestion.vue";
+import ProfilePolls from "./ProfilePolls.vue";
+import profileBottom from "./profileBottom.vue";
 
-import profileData from './data.js'
+import profileData from "./data.js";
 
 /* eslint-disable global-require */
 export default {
@@ -70,14 +70,9 @@ export default {
     data() {
         return {
             profileData: profileData,
-        }
+        };
     },
-    // created() {
-    //     this.$http.get('/profile').then(res => {
-    //         this.profileData = res.data
-    //     })
-    // },
-}
+};
 /* eslint-disable global-require */
 </script>
 

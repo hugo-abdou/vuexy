@@ -32,31 +32,6 @@
             <account-setting-password />
         </b-tab>
         <!--/ change password tab -->
-
-        <!-- social links -->
-        <b-tab>
-            <!-- title -->
-            <template #title>
-                <feather-icon icon="LinkIcon" size="18" class="mr-50" />
-                <span class="font-weight-bold">Social</span>
-            </template>
-
-            <!-- <account-setting-social v-if="options.social" :social-data="options.social" /> -->
-        </b-tab>
-
-        <!-- notification -->
-        <b-tab>
-            <!-- title -->
-            <template #title>
-                <feather-icon icon="BellIcon" size="18" class="mr-50" />
-                <span class="font-weight-bold">Notifications</span>
-            </template>
-
-            <!-- <account-setting-notification
-                v-if="options.notification"
-                :notification-data="options.notification"
-            /> -->
-        </b-tab>
     </b-tabs>
 </template>
 

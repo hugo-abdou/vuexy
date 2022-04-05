@@ -1,7 +1,7 @@
 <template>
     <b-card
         class="profile-header mb-2"
-        :img-src="headerData.coverImg"
+        :img-src="coverImg"
         img-top
         alt="cover photo"
         body-class="p-0"
@@ -14,17 +14,17 @@
                         size="100%"
                         rounded="sm"
                         variant="light-primary"
-                        :src="auth.avatar"
+                        :src="headerData.avatar"
                         class="badge-minimal"
                     />
                 </div>
                 <!-- profile title -->
                 <div class="profile-title ml-3">
                     <h2 class="text-white">
-                        {{ auth.fullName }}
+                        {{ headerData.fullName }}
                     </h2>
                     <p class="text-white">
-                        {{ auth.role }}
+                        {{ headerData.role }}
                     </p>
                 </div>
                 <!--/ profile title -->
@@ -122,14 +122,16 @@ export default {
     directives: {
         Ripple,
     },
-    props: {
-        headerData: {
-            type: Object,
-            default: () => {},
+    computed: {
+        ...mapGetters({ headerData: "profile/header" }),
+        coverImg() {
+            return this.headerData.coverImg
+                ? this.headerData.coverImg
+                : require("@/assets/images/profile/placeholder-wide.png");
         },
     },
-    computed: {
-        ...mapGetters({ auth: "auth/auth" }),
+    async created() {
+        this.$store.dispatch("profile/getProfileData", "header");
     },
 };
 </script>

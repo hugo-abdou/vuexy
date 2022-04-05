@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\AuthUserResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
 
 class AuthController extends Controller
 {
@@ -37,6 +38,9 @@ class AuthController extends Controller
     }
     public function logout(Request $request)
     {
+        collect(Cookie::get())->map(function ($cookie, $key) {
+            Cookie::forget($key);
+        });
         if ($request->session()->invalidate()) {
             return response(['message' => 'success'], 200);
         }

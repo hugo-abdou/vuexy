@@ -19,7 +19,6 @@ class UpdateUserProfileInformation
     public function update($user, array $input)
     {
         $data = Validator::make($input, $this->validation_rules($user, $input))->validate();
-
         $filtered = Arr::except($data, ['avatar']);
 
         if (isset($input['avatar']) && is_file($input['avatar'])) {
@@ -57,10 +56,10 @@ class UpdateUserProfileInformation
             'fullName' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
             'avatar' => Rule::when(is_file($input['avatar']), ['required', 'mimes:jpg,jpeg,png', 'max:1024']),
-            'bio' => Rule::when(isset($input['bio']), ['required', 'string', 'max:255']),
-            'phone' => Rule::when(isset($input['phone']), ['required', 'string', 'max:255']),
-            'birth_date' => Rule::when(isset($input['birth_date']), ['required', 'string', 'max:255']),
-            'country' => Rule::when(isset($input['country']), ['required', 'string', 'max:255']),
+            'bio' =>  ['required', 'string', 'max:255'],
+            'phone' =>  ['required', 'string', 'max:255'],
+            'birth_date' =>  ['required', 'string', 'max:255'],
+            'country' => ['required', 'string', 'max:255'],
         ];
     }
 }

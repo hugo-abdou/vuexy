@@ -4,16 +4,26 @@ NOTE:
 ------
 PLACE HERE YOUR OWN SCSS CODES AND IF NEEDED, OVERRIDE THE STYLES FROM THE OTHER STYLESHEETS.
 WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BETTER LIKE THIS.  */
-.media img{
+// @import "~flatpickr/dist/flatpickr.min.css";
+.media img {
     object-fit: cover;
     object-position: center;
 }
-.profile-img img{
+.profile-img img {
     width: 100%;
     height: 100%;
     object-position: center;
     object-fit: cover;
 }
-.Vue-Toastification__toast{
-    border: solid 1px rgb(67, 67, 97);
+.Vue-Toastification__toast {
+    border: solid 1px rgb(217, 217, 228);
+}
+
+.dark-layout .Vue-Toastification__toast {
+    border: solid 1px rgb(58, 58, 64);
+}
+
+#user-profile .card-img-top {
+    height: 300px;
+    object-fit: cover;
 }
